@@ -8,7 +8,7 @@ A lightweight market dashboard built with reveal.js getting data from an API wit
 │   └── .env.example         # Example .env file showing format without actual secrets
 ├── public/                  # Publicly accessible directory (set as the web root in Apache)
 │   ├── .htaccess            # Access control and security rules for public files
-│   ├── .htaccess.example    # Example .htaccess file (for version control)
+│   ├── htaccess.example     # Example .htaccess file (for version control)
 │   ├── index.html           # Main HTML file, served directly to users
 │   ├── api_proxy.php        # PHP script that retrieves data from the API using the API key
 │   ├── styles.css           # External CSS file for styling
@@ -87,22 +87,22 @@ To set up your GitHub repository `marketdashlight` on your Apache web server at 
    sudo chown www-data:www-data /var/www/yourproject/config/.env
    ```
 
-### Step 4: Secure the `.env` File
+### Step 4: Secure the `.env` File and Set Up `.htaccess`
 
-To ensure the `.env` file isn’t publicly accessible, you can add a rule to Apache to prevent access to `.env` files:
+To ensure the `.env` file isn’t publicly accessible and to apply security settings, copy `.htaccess.example` to `.htaccess` in the `public` directory. This will enforce the rules necessary for protecting your environment and configuration files.
 
-1. Open your Apache configuration file or `.htaccess` file in the project directory.
+1. **Copy the `htaccess.example` file to `.htaccess`**:
+   ```bash
+   cp /var/www/yourproject/public/htaccess.example /var/www/yourproject/public/.htaccess
+   ```
+
+2. **Edit the `.htaccess` file**:
+   Open the `.htaccess` file to confirm or modify the security rules.
    ```bash
    sudo nano /var/www/yourproject/public/.htaccess
    ```
 
-2. Add the following:
-   ```apache
-   <Files ".env">
-       Order allow,deny
-       Deny from all
-   </Files>
-   ```
+This setup copies the example `htaccess.example` to the active `.htaccess`, enforcing all security rules, including protection of the `.env` file.
 
 ### Step 5: Verify Permissions and Ownership
 
