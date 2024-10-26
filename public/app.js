@@ -1,4 +1,4 @@
-// Import retry intervals and fallback data from config.js
+// Import retry intervals, fallback data, and API fields from config.js
 async function updateData(retryCount = 0) {
     try {
         const response = await fetch('/api_proxy.php');
@@ -7,12 +7,11 @@ async function updateData(retryCount = 0) {
         const data = await response.json();
         if (!data || !data[0]) throw new Error('Invalid API data format');
 
-        // Extract necessary fields from the first item in the array
-        const { symbol, close, percentage_diff, datetime } = data[0];
-        const price = close || 'N/A';
-        const percentChange = percentage_diff.toFixed(2); // Directly use percentage_diff as is
-
-        const timestamp = new Date(datetime).toLocaleString();
+        // Dynamically extract fields based on config.js
+        const symbol = data[0][apiFields.symbol] || fallbackData.symbol;
+        const price = data[0][apiFields.price] || fallbackData.price;
+        const percentChange = (data[0][apiFields.percentChange] || fallbackData.percentChange).toFixed(2);
+        const timestamp = new Date(data[0][apiFields.timestamp] || fallbackData.timestamp).toLocaleString();
 
         displayData(symbol, price, percentChange, timestamp, false);
     } catch (error) {

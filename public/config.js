@@ -10,3 +10,11 @@ const fallbackData = {
     percentChange: "1.21",
     timestamp: "2024-10-28 16:04:23"
 };
+
+// Fields to extract from the API response
+const apiFields = {
+    symbol: "symbol",
+    price: "close",
+    percentChange: "percentage_diff",
+    timestamp: "datetime"
+};
