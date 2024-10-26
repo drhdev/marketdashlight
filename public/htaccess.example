@@ -1,1 +1,38 @@
+# Prevent access to .env file
+<Files ".env">
+    Require all denied
+</Files>
+
+# Restrict access to api_proxy.php and other PHP files to local IP only
+<FilesMatch "\.php$">
+    Require ip 127.0.0.1
+</FilesMatch>
+
+# Security headers to protect against XSS, clickjacking, and content sniffing
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header set X-Content-Type-Options "nosniff"
+
+    # Prevent clickjacking
+    Header set X-Frame-Options "DENY"
+
+    # Enable cross-site scripting (XSS) filter in supported browsers
+    Header set X-XSS-Protection "1; mode=block"
+
+    # Content Security Policy (CSP) to control resources
+    Header set Content-Security-Policy "default-src 'self'; img-src 'self'; script-src 'self'; style-src 'self';"
+
+    # Referrer Policy to control what referrer information is sent
+    Header set Referrer-Policy "no-referrer-when-downgrade"
+</IfModule>
+
+# Deny directory browsing
+Options -Indexes
+
+# Redirect all HTTP to HTTPS (if SSL is enabled)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
 
