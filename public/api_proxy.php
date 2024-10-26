@@ -1,5 +1,5 @@
 <?php
-// Load environment variables securely
+// Function to load environment variables securely
 function loadEnv($path) {
     if (!file_exists($path)) {
         throw new Exception(".env file not found at " . $path);
@@ -28,15 +28,19 @@ try {
     loadEnv($envPath);
 
     // Retrieve the API key and URL
-    $apiKey = $_SERVER['API_KEY'] ?? null;
+    $apiKey = $_SERVER['API_KEY'] ?? '';
     $apiUrl = $_SERVER['API_URL'] ?? null;
 
-    if (!$apiKey || !$apiUrl) {
-        throw new Exception("API key or API URL is not configured.");
+    // Check if API URL is configured
+    if (!$apiUrl) {
+        throw new Exception("API URL is not configured.");
     }
 
-    // Build the URL securely with urlencode
-    $url = $apiUrl . '?apikey=' . urlencode($apiKey);
+    // Build the URL securely, adding the API key only if it's provided
+    $url = $apiUrl;
+    if (!empty($apiKey)) {
+        $url .= '?apikey=' . urlencode($apiKey);
+    }
 
     // Use cURL for HTTP request with error handling and timeout
     $ch = curl_init();
@@ -69,4 +73,3 @@ try {
     header('Cache-Control: no-store');
     echo json_encode(['error' => 'An error occurred while processing the request. Please try again later.']);
 }
-

@@ -1,18 +1,19 @@
-// app.js
-
-// Function to fetch data from the backend with retry logic
+// Import retry intervals and fallback data from config.js
 async function updateData(retryCount = 0) {
     try {
         const response = await fetch('/api_proxy.php');
         if (!response.ok) throw new Error('Network response was not ok');
         
         const data = await response.json();
-        if (data.error) throw new Error(data.error);
+        if (!data || !data[0]) throw new Error('Invalid API data format');
 
-        const symbol = data.symbol || 'N/A';
-        const price = data.latestPrice || 'N/A';
-        const percentChange = (data.changePercent * 100).toFixed(2);
-        const timestamp = new Date(data.timestamp).toLocaleString();
+        // Extract necessary fields from the first item in the array
+        const { symbol, close, percentage_diff, datetime } = data[0];
+        const price = close || 'N/A';
+        const percentChange = percentage_diff.toFixed(2); // Directly use percentage_diff as is
+
+        const timestamp = new Date(datetime).toLocaleString();
+
         displayData(symbol, price, percentChange, timestamp, false);
     } catch (error) {
         console.error(`Attempt ${retryCount + 1}: ${error.message}`);
@@ -69,6 +70,5 @@ function displayData(symbol, price, percentChange, timestamp, isError) {
     }
 }
 
-// Initialize data and set interval to update every 15 minutes
-setInterval(() => updateData(0), 900000); // 15 minutes
-updateData(0); // Initial load
+// Initial API call when the page loads
+updateData(0);
