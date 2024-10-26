@@ -5,25 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Centered Data Dashboard</title>
     <style>
-        /* Styles for your HTML */
+        /* Basic styles for the centered content */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+        }
+        .centered-box {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f4f4f4;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .data-box {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .message-box {
+            font-size: 20px;
+            font-style: italic;
+        }
+        .timestamp {
+            font-size: 16px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .green-text { color: green; }
+        .red-text { color: red; }
+        .black-text { color: black; }
     </style>
 </head>
 <body>
-    <div id="content">
-        <!-- Your main content here -->
+    <div class="centered-box">
+        <h2>Market Data Dashboard</h2>
+        <div class="data-box" id="data-display">
+            Loading data...
+        </div>
+        <div class="message-box" id="message-display">
+            <!-- Message will display here based on data -->
+        </div>
+        <div class="timestamp" id="timestamp-display">
+            <!-- Last updated timestamp or error message will display here -->
+        </div>
     </div>
+
     <script>
+        // Function to fetch and display data from the backend
         function updateData() {
-            fetch('/api_proxy.php') // Accesses the backend PHP file
-                .then(response => response.json())
+            fetch('/api_proxy.php') // Call the backend PHP endpoint
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.error) {
                         throw new Error(data.error);
                     }
-                    // Display data on the page
+                    // Extract and display data from response
+                    const symbol = data.symbol || 'N/A';
+                    const price = data.latestPrice || 'N/A';
+                    const percentChange = (data.changePercent * 100).toFixed(2);
+                    const timestamp = new Date(data.timestamp).toLocaleString();
+
+                    displayData(symbol, price, percentChange, timestamp, false);
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    // Use default data if API call fails
+                    displayData('SPY', '534.76', '1.21', '2024-10-28 16:04:23', true);
+                });
         }
+
+        // Function to display data in the HTML elements
+        function displayData(symbol, price, percentChange, timestamp, isError) {
+            const dataDisplay = document.getElementById('data-display');
+            const messageDisplay = document.getElementById('message-display');
+            const timestampDisplay = document.getElementById('timestamp-display');
+            
+            // Determine color based on percentChange
+            let colorClass = 'black-text';
+            if (percentChange > 0) colorClass = 'green-text';
+            else if (percentChange < 0) colorClass = 'red-text';
+
+            // Display data with color coding
+            dataDisplay.innerHTML = `
+                Symbol: <span class="${colorClass}">${symbol}</span> |
+                Price: $${price} |
+                Change: <span class="${colorClass}">${percentChange}%</span>
+            `;
+
+            // Display message based on percentChange
+            let message = '';
+            const percent = parseFloat(percentChange);
+            if (percent > 1.1) {
+                message = "It looks like a great day in the markets!";
+            } else if (percent > 0.3) {
+                message = "It looks like a good day in the markets...";
+            } else if (percent > -0.3) {
+                message = "It looks like nothing really happens in the markets today...";
+            } else if (percent > -1.1) {
+                message = "It looks like a bad day in the markets...";
+            } else {
+                message = "It looks like a really bad day in the markets...";
+            }
+
+            // Display the message
+            messageDisplay.innerHTML = message;
+
+            // Display timestamp or error message
+            if (isError) {
+                timestampDisplay.innerHTML = "ERROR: API CALL FAILED - USING DEFAULT VALUES!!!";
+                timestampDisplay.classList.add("error");
+            } else {
+                timestampDisplay.innerHTML = `Last updated: ${timestamp}`;
+                timestampDisplay.classList.remove("error");
+            }
+        }
+
+        // Call updateData initially and set interval to 15 minutes
         setInterval(updateData, 900000); // 15 minutes
         updateData(); // Initial load
     </script>
