@@ -73,9 +73,10 @@ To set up your GitHub repository `marketdashlight` on your Apache web server at 
    sudo nano /var/www/yourproject/config/.env
    ```
 
-2. Add your API key to this `.env` file:
+2. Add your API key and API URL to this `.env` file:
    ```plaintext
-   API_KEY=your_secret_api_key
+   API_KEY=your_actual_api_key_here
+   API_URL=https://api.example.com/data
    ```
 
 3. Ensure that the `.env` file has restricted permissions:
