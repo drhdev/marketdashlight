@@ -1,7 +1,7 @@
-# Prevent access to .env file
-<Files ".env">
+# Prevent access to all .env files anywhere in the project
+<FilesMatch "^\.env$">
     Require all denied
-</Files>
+</FilesMatch>
 
 # Restrict access to api_proxy.php and other PHP files to local IP only
 <FilesMatch "\.php$">
