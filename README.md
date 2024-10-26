@@ -31,3 +31,11 @@ In /etc/apache2/sites-available/yourdomain.conf, set DocumentRoot to /var/www/yo
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
+
+## Reload Apache
+
+Apply changes by reloading Apache:
+
+```
+sudo systemctl reload apache2
+```
