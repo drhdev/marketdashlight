@@ -113,30 +113,3 @@ sudo chmod -R 755 /var/www/yourproject
 
 With this setup, `index.html` will load directly at `https://example.com`, while your sensitive `.env` file remains secure outside the `/public` directory.
 
-
-## Update Apache Configuration
-
-In /etc/apache2/sites-available/yourdomain.conf, set DocumentRoot to /var/www/yourproject/public:
-
-```
-<VirtualHost *:80>
-    ServerName yourdomain.com
-    DocumentRoot /var/www/yourproject/public
-
-    <Directory /var/www/yourproject/public>
-        AllowOverride All
-        Require all granted
-    </Directory>
-
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-```
-
-## Reload Apache
-
-Apply changes by reloading Apache:
-
-```
-sudo systemctl reload apache2
-```
