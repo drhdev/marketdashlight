@@ -20,6 +20,8 @@ A lightweight market dashboard built with reveal.js getting data from an API wit
 └── .gitignore               # Git ignore file to exclude sensitive files like `.env` and `.htaccess`
 ```
 
+## Setup
+
 To set up your GitHub repository `marketdashlight` on your Apache web server at `/var/www/`, ensuring that `index.html` loads when you visit `https://example.com`, follow these steps:
 
 ### Step 1: Clone the Repository
@@ -121,3 +123,34 @@ sudo chmod -R 755 /var/www/yourproject
 
 With this setup, `index.html` will load directly at `https://example.com`, while your sensitive `.env` file remains secure outside the `/public` directory.
 
+
+## What does the script expect from the API?
+
+The script expects a JSON response from the API with certain fields to display in the HTML, specifically:
+
+- `symbol`: The stock or asset symbol (e.g., "AAPL" for Apple, "SPY" for the S&P 500).
+- `latestPrice`: The latest price of the asset (e.g., 534.76).
+- `changePercent`: The percentage change in price (e.g., 0.0121 for a 1.21% change).
+- `timestamp`: A timestamp indicating when the data was last updated.
+
+### Example JSON Response
+
+Here's an example of what the API response might look like:
+
+```json
+{
+  "symbol": "SPY",
+  "latestPrice": 534.76,
+  "changePercent": 0.0121,
+  "timestamp": "2024-10-28T16:04:23Z"
+}
+```
+
+### Explanation of Fields
+
+- **`symbol`**: The ticker or identifier of the asset (e.g., `"SPY"`).
+- **`latestPrice`**: The most recent price of the asset, as a number (e.g., `534.76`).
+- **`changePercent`**: The percentage change in the asset's price, provided as a decimal (e.g., `0.0121` represents a 1.21% increase).
+- **`timestamp`**: The date and time when this data was recorded, typically in ISO 8601 format (e.g., `"2024-10-28T16:04:23Z"`).
+
+This data is then parsed in the JavaScript to update the display fields, applying color coding and formatting as necessary.
