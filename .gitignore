@@ -6,3 +6,6 @@ node_modules/
 vendor/
 .DS_Store
 Thumbs.db
+
+# Ignore actual .htaccess files
+/.htaccess
