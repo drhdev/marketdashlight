@@ -4,18 +4,20 @@ A lightweight market dashboard built with reveal.js getting data from an API wit
 ```
 /var/www/yourproject/
 ├── config/
-│   ├── .env              # Actual .env file containing sensitive data (not in version control)
-│   └── .env.example      # Example .env file showing format without actual secrets
-├── public/               # Publicly accessible directory (set as the web root in Apache)
-│   ├── index.html        # Main HTML file, served directly to users
-│   ├── api_proxy.php     # PHP script that retrieves data from the API using the API key
-│   ├── styles.css        # External CSS file for styling
-│   ├── config.js         # JavaScript configuration file for constants
-│   ├── app.js            # Main JavaScript application file
-│   └── images/           # Directory for image files
-│       └── market_logo.png # Example image file
-├── src/                  # Directory for additional application logic, if needed
-└── .gitignore            # Git ignore file to exclude sensitive files like `.env`
+│   ├── .env                 # Actual .env file containing sensitive data (not in version control)
+│   └── .env.example         # Example .env file showing format without actual secrets
+├── public/                  # Publicly accessible directory (set as the web root in Apache)
+│   ├── .htaccess            # Access control and security rules for public files
+│   ├── .htaccess.example    # Example .htaccess file (for version control)
+│   ├── index.html           # Main HTML file, served directly to users
+│   ├── api_proxy.php        # PHP script that retrieves data from the API using the API key
+│   ├── styles.css           # External CSS file for styling
+│   ├── config.js            # JavaScript configuration file for constants
+│   ├── app.js               # Main JavaScript application file
+│   └── images/              # Directory for image files
+│       └── market_logo.png  # Example image file
+├── src/                     # Directory for additional application logic, if needed
+└── .gitignore               # Git ignore file to exclude sensitive files like `.env` and `.htaccess`
 ```
 
 To set up your GitHub repository `marketdashlight` on your Apache web server at `/var/www/`, ensuring that `index.html` loads when you visit `https://example.com`, follow these steps:
